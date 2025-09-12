@@ -55,6 +55,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 해제됨.
 		/// </summary>
+		/// <param name="explicitDisposing">명시적인 해제 여부. (직접적인 Dispose() 호출을 통한 해제)</param>
 		protected abstract void OnDispose(bool explicitDisposing);
 
 		/// <summary>
