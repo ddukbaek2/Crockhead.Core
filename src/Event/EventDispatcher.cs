@@ -26,7 +26,7 @@ namespace Crockhead.Core
 		/// </summary>
 		protected override void OnDispose(bool explicitDisposing)
 		{
-			m_Delegate = null;
+			Clear();
 		}
 
 		/// <summary>
@@ -49,6 +49,14 @@ namespace Crockhead.Core
 				return;
 
 			m_Delegate = Delegate.Remove(m_Delegate, target);
+		}
+
+		/// <summary>
+		/// 전체 비우기.
+		/// </summary>
+		public void Clear()
+		{
+			m_Delegate = null;
 		}
 
 		/// <summary>

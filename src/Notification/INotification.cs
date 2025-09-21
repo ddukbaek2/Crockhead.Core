@@ -1,10 +1,9 @@
 namespace Crockhead.Core
 {
 	/// <summary>
-	/// 이벤트 컨텍스트 인터페이스.
+	/// 통보 내용 인터페이스.
 	/// </summary>
 	public interface INotification
 	{
-
 	}
 }
