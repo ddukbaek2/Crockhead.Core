@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 
 
@@ -6,7 +6,7 @@ namespace Crockhead.Core
 {
 	/// <summary>
 	/// 제네릭 고유 식별자 생성기 + 컬렉션.
-	/// - IEnumerable(T) 인터페이스 구현체.
+	/// - IEnumerable(TResult) 인터페이스 구현체.
 	/// </summary>
 	public abstract class Identifiers<TIdentifier> : Disposable, IEnumerable<TIdentifier>
 	{
@@ -43,7 +43,7 @@ namespace Crockhead.Core
 
 		/// <summary>
 		/// 고유 식별자 생성.
-		/// - IUniqueIdentifierGenerator(T) 인터페이스 구현.
+		/// - IUniqueIdentifierGenerator(TResult) 인터페이스 구현.
 		/// </summary>
 		public TIdentifier Generate()
 		{
@@ -64,7 +64,7 @@ namespace Crockhead.Core
 
 		/// <summary>
 		/// other를 기준으로 현재 식별자 할당 상태를 최신화.
-		/// - IUniqueIdentifierGenerator(T) 인터페이스 구현.
+		/// - IUniqueIdentifierGenerator(TResult) 인터페이스 구현.
 		/// </summary>
 		public void Synchronize(Identifiers<TIdentifier> other)
 		{
@@ -75,7 +75,7 @@ namespace Crockhead.Core
 
 		/// <summary>
 		/// 고유 식별자 사용 종료.
-		/// - IUniqueIdentifierGenerator(T) 인터페이스 구현.
+		/// - IUniqueIdentifierGenerator(TResult) 인터페이스 구현.
 		/// </summary>
 		public bool Release(TIdentifier identifier)
 		{
