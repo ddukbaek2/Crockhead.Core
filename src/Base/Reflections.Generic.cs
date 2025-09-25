@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 
 
 namespace Crockhead.Core
@@ -62,6 +63,16 @@ namespace Crockhead.Core
 			{
 				throw exception;
 			}
+		}
+
+		/// <summary>
+		/// 열거체 목록 반환.
+		/// </summary>
+		public static TEnum[] GetEnumValues<TEnum>() where TEnum : Enum
+		{
+			var enumType = typeof(TEnum);
+			var values = (TEnum[])Enum.GetValues(enumType);
+			return values;
 		}
 	}
 }
