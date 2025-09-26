@@ -8,8 +8,31 @@
 [![NuGet version](https://img.shields.io/nuget/v/Crockhead.Core.svg?style=flat&logo=nuget)](https://www.nuget.org/packages/Crockhead.Core/)
 [![NuGet downloads](https://img.shields.io/nuget/dt/Crockhead.Core.svg?style=flat)](https://www.nuget.org/packages/Crockhead.Core/)
 
+Lightweight C# base library providing structured and reusable core components.   
+Targets .NET Standard 2.1 with no external dependencies.   
+
+## 설치
+~~~bash
+dotnet add package Crockhead.Core
+~~~
+~~~bat
+dotnet add package Crockhead.Core
+~~~
+~~~powershell
+dotnet add package Crockhead.Core
+~~~
+~~~text
+Crockhead.Core
+~~~
+
 ## 라이브러리 기반
 - netstandard2.1   
+
+## 네임스페이스
+~~~cs
+using Crockhead.Core;
+using Crockhead.Logging;
+~~~
 
 ## 디렉토리 별 기능 목록 (최신 버전 기준)
 |항목|설명|
@@ -23,9 +46,4 @@
 |Notification|다양한 기능의 이벤트 통보.|
 |Operation|다양한 처리 명령. (비동기 명령 처리, 순차적인 명령 보류 처리 등)|
 |Registration|타입 별 고유 인스턴스 등록 및 보관 기능.| 
-|Shared|객체의 공유를 위한 인스턴스 캐시 보관소 객체 및 싱글톤 객체.|
-
-## 네임스페이스
-~~~cs
-using Crockhead.Core;
-~~~
+|Shared|인스턴스 캐시 및 싱글톤 기능 등.|
