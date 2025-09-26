@@ -15,14 +15,8 @@ Targets .NET Standard 2.1 with no external dependencies.
 ~~~bash
 dotnet add package Crockhead.Core
 ~~~
-~~~bat
-dotnet add package Crockhead.Core
-~~~
 ~~~powershell
-dotnet add package Crockhead.Core
-~~~
-~~~text
-Crockhead.Core
+Install-Package Crockhead.Core
 ~~~
 
 ## 라이브러리 기반
