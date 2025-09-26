@@ -1,4 +1,4 @@
-namespace Crockhead.Core.src.Operation
+namespace Crockhead.Core
 {
 	/// <summary>
 	/// 빈 명령.

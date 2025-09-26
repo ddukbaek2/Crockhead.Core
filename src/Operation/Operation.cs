@@ -73,12 +73,12 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 완료 + 실패 여부 프로퍼티.
 		/// </summary>
-		public bool IsFailed => IsCompleted && !m_IsSucceeded;
+		public bool IsFaulted => IsCompleted && !m_IsSucceeded;
 
 		/// <summary>
 		/// 완료 + 취소 여부 프로퍼티.
 		/// </summary>
-		public bool IsCancelled => IsCompleted && m_IsCancelled;
+		public bool IsCanceled => IsCompleted && m_IsCancelled;
 
 		/// <summary>
 		/// 실패 예외 프로퍼티.
@@ -99,13 +99,17 @@ namespace Crockhead.Core
 		{
 		}
 
-
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
 		public Operation(Action<IOperation> operation, Action<IOperation> completion) : base()
 		{
-			Reset();
+			m_IsStarted = false;
+			m_IsCompleted = false;
+			m_IsSucceeded = false;
+			m_IsCancelled = false;
+			m_Exception = null;
+
 			SetOperation(operation);
 			SetCompletion(completion);
 		}
@@ -138,7 +142,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 명령 설정.
 		/// </summary>
-		public void SetOperation(Action<IOperation> operation)
+		public virtual void SetOperation(Action<IOperation> operation)
 		{
 			// 명령 실행 중에는 변경 불가.
 			if (IsRunning)
@@ -150,7 +154,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 명령 설정.
 		/// </summary>
-		public void SetCompletion(Action<IOperation> completion)
+		public virtual void SetCompletion(Action<IOperation> completion)
 		{
 			// 명령 실행 중에는 변경 불가.
 			if (IsRunning)
@@ -162,10 +166,13 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 명령 시작.
 		/// </summary>
-		public void Start()
+		public virtual void Start()
 		{
-			// 명령 시작 되었거나, 명령이 완료된 후에는 호출 불가.
-			if (m_IsStarted || m_IsCompleted)
+			// 명령 시작 된 후에는 호출 불가.
+			//if (m_IsStarted || m_IsCompleted)
+
+			// Reset() 없이는 Start()하면 다시는 m_IsStarted가 false가 될 일이 없음.
+			if (m_IsStarted)
 				return;
 
 			m_IsStarted = true;
@@ -183,12 +190,12 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 대기.
 		/// </summary>
-		public void WaitForCompletion()
+		public virtual void WaitForCompletion()
 		{
 			if (!m_IsStarted)
 				return;
 
-			while (m_IsCompleted)
+			while (!m_IsCompleted)
 			{
 				Thread.Sleep(1);
 			}
@@ -219,7 +226,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 명령 성공.
 		/// </summary>
-		public void Success()
+		public virtual void Success()
 		{
 			// 명령이 시작되지 않았거나, 명령이 완료된 후에는 호출 불가.
 			if (!m_IsStarted || m_IsCompleted)
@@ -231,7 +238,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 명령 실패.
 		/// </summary>
-		public void Fail(Exception exception)
+		public virtual void Fail(Exception exception)
 		{
 			// 명령이 시작되지 않았거나, 명령이 완료된 후에는 호출 불가.
 			if (!m_IsStarted || m_IsCompleted)
@@ -244,7 +251,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 명령 취소.
 		/// </summary>
-		public void Cancel()
+		public virtual void Cancel()
 		{
 			// 명령이 시작되지 않았거나, 명령이 완료된 후에는 호출 불가.
 			if (!m_IsStarted || m_IsCompleted)

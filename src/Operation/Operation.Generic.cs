@@ -71,7 +71,7 @@ namespace Crockhead.Core
 		}
 
 		/// <summary>
-		/// 명령 설정.
+		/// 명령 설정. (오버로딩)
 		/// </summary>
 		public void SetOperation(Action<Operation<TResult>> operation)
 		{
@@ -79,7 +79,7 @@ namespace Crockhead.Core
 		}
 
 		/// <summary>
-		/// 명령 설정.
+		/// 명령 설정. (오버로딩)
 		/// </summary>
 		public void SetCompletion(Action<Operation<TResult>> completion)
 		{

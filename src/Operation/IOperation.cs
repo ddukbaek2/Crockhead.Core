@@ -19,7 +19,7 @@ namespace Crockhead.Core
 		bool IsStarted { get; }
 
 		/// <summary>
-		/// 완료 여부 프로퍼티.
+		/// 완료 여부 프로퍼티. (IsCompletedSuccessfully)
 		/// <para>한번이라도 Complete() or Cancel()을 호출하면 이후 Reset() 전까지는 계속 참을 반환.</para>
 		/// </summary>
 		bool IsCompleted { get; }
@@ -32,12 +32,12 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 완료 + 실패 여부 프로퍼티.
 		/// </summary>
-		bool IsFailed { get; }
+		bool IsFaulted { get; }
 
 		/// <summary>
 		/// 완료 + 취소 여부 프로퍼티.
 		/// </summary>
-		bool IsCancelled { get; }
+		bool IsCanceled { get; }
 
 		/// <summary>
 		/// 실패 예외 프로퍼티.
