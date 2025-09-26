@@ -1,4 +1,4 @@
-﻿namespace Crockhead.Core
+namespace Crockhead.Core
 {
 	/// <summary>
 	/// 공유 클래스.
@@ -49,19 +49,19 @@
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
-		protected abstract void OnCreate();
+		protected abstract void OnCreate(params object[] arguments);
 
 		/// <summary>
 		/// 생성.
 		/// </summary>
-		public static TClass Create()
+		public static TClass Create(params object[] arguments)
 		{
 			if (SharedInstances.TryGet<TClass>(out var sharedInstance))
 				return sharedInstance;
 
 			sharedInstance = new TClass();
 			SharedInstances.Set<TClass>(sharedInstance);
-			sharedInstance.OnCreate();
+			sharedInstance.OnCreate(arguments);
 			return sharedInstance;
 		}
 	}
