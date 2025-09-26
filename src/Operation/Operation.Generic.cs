@@ -75,7 +75,7 @@ namespace Crockhead.Core
 		/// </summary>
 		public void SetOperation(Action<Operation<TResult>> operation)
 		{
-			base.SetOperation((Action<Operation>)operation);
+			base.SetOperation((Action<IOperation>)operation);
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace Crockhead.Core
 		/// </summary>
 		public void SetCompletion(Action<Operation<TResult>> completion)
 		{
-			base.SetCompletion((Action<Operation>)completion);
+			base.SetCompletion((Action<IOperation>)completion);
 		}
 
 		/// <summary>

@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<Title>Crockhead.Core</Title>
 		<PackageId>Crockhead.Core</PackageId>
-		<Version>0.0.6</Version>
+		<Version>0.0.7</Version>
 		<Authors>ddukbaek2</Authors>
 		<Description>Lightweight C# base library providing structured and reusable core components. Targets .NET Standard 2.1 with no external dependencies.</Description>
 		<TargetFramework>netstandard2.1</TargetFramework>

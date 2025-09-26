@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using System.Threading;
 
 
 namespace Crockhead.Core
@@ -11,17 +11,17 @@ namespace Crockhead.Core
 	/// <para>취소의 경우 즉시 명령이 실행되고 동일 스택에서 결과까지 반영되는 동기적 사용시 쓸 수 없음.</para>
 	/// <para>operation에서 OperationCanceledException 해도 취소 가능.</para>
 	/// </summary>
-	public class Operation : Disposable
+	public class Operation : Disposable, IOperation
 	{
 		/// <summary>
 		/// 명령 처리 콜백.
 		/// </summary>
-		private Action<Operation> m_Operation;
+		private Action<IOperation> m_Operation;
 
 		/// <summary>
 		/// 명령 완료 콜백.
 		/// </summary>
-		private Action<Operation> m_Completion;
+		private Action<IOperation> m_Completion;
 
 		/// <summary>
 		/// 시작 여부.
@@ -95,7 +95,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
-		public Operation(Action<Operation> operation) : this(operation, null)
+		public Operation(Action<IOperation> operation) : this(operation, null)
 		{
 		}
 
@@ -103,7 +103,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
-		public Operation(Action<Operation> operation, Action<Operation> completion) : base()
+		public Operation(Action<IOperation> operation, Action<IOperation> completion) : base()
 		{
 			Reset();
 			SetOperation(operation);
@@ -138,7 +138,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 명령 설정.
 		/// </summary>
-		public void SetOperation(Action<Operation> operation)
+		public void SetOperation(Action<IOperation> operation)
 		{
 			// 명령 실행 중에는 변경 불가.
 			if (IsRunning)
@@ -150,7 +150,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 명령 설정.
 		/// </summary>
-		public void SetCompletion(Action<Operation> completion)
+		public void SetCompletion(Action<IOperation> completion)
 		{
 			// 명령 실행 중에는 변경 불가.
 			if (IsRunning)
@@ -177,6 +177,20 @@ namespace Crockhead.Core
 			{
 				Fail(exception);
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// 대기.
+		/// </summary>
+		public void WaitForCompletion()
+		{
+			if (!m_IsStarted)
+				return;
+
+			while (m_IsCompleted)
+			{
+				Thread.Sleep(1);
 			}
 		}
 

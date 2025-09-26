@@ -8,7 +8,7 @@ namespace Crockhead.Core
 	/// <para>생성자의 operation 입력 필수.</para>
 	/// <para>취소는 operation에서 throw new OperationCanceledException() 호출.</para>
 	/// </summary>
-	public class OperationResultExecutor<TResult> : Disposable
+	public class OperationExecutor<TResult> : Disposable
 	{
 		/// <summary>
 		/// 명령.
@@ -28,7 +28,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
-		public OperationResultExecutor(Func<TResult> operation) : base()
+		public OperationExecutor(Func<TResult> operation) : base()
 		{
 			m_Operation = new Operation<TResult>();
 			m_ResultGetter = operation;

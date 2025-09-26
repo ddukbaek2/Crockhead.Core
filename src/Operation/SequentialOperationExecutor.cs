@@ -13,7 +13,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 보류 중인 명령 목록.
 		/// </summary>
-		private Queue<Operation> m_PendingQueue;
+		private Queue<IOperation> m_PendingQueue;
 
 		/// <summary>
 		/// 재진입 방어.
@@ -28,14 +28,14 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 현재 오퍼레이션.
 		/// </summary>
-		public Operation Current => IsRunning ? m_PendingQueue.Peek() : null;
+		public IOperation Current => IsRunning ? m_PendingQueue.Peek() : null;
 
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
 		public SequentialOperationExecutor()
 		{
-			m_PendingQueue = new Queue<Operation>();
+			m_PendingQueue = new Queue<IOperation>();
 			m_IsContinuing = false;
 		}
 
@@ -67,12 +67,12 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 명령 추가.
 		/// </summary>
-		public void Execute(Action action)
+		public IOperation Execute(Action action)
 		{
 			if (action == null)
-				return;
+				return null;
 
-			void OnOperation(Operation operation)
+			void OnOperation(IOperation operation)
 			{
 				try
 				{
@@ -90,25 +90,29 @@ namespace Crockhead.Core
 				}
 			}
 
-			Execute(OnOperation);
+			var newOperation = Execute(OnOperation);
+			return newOperation;
 		}
 
 		/// <summary>
 		/// 명령 실행.
 		/// </summary>
-		public void Execute(Action<Operation> operation)
+		public IOperation Execute(Action<IOperation> operation)
 		{
 			if (operation == null)
-				return;
+				return null;
 
-			void OnCompletion(Operation operation)
+			void OnCompletion(IOperation operation)
 			{
 				// 비동기 작업이 완료되면 이어서 명령 처리 호출.
 				Continue();
 			}
 
-			m_PendingQueue.Enqueue(new Operation(operation, OnCompletion));
+			var newOperation = new Operation(operation, OnCompletion);
+			m_PendingQueue.Enqueue(newOperation);
 			Continue();
+
+			return newOperation;
 		}
 
 		/// <summary>
@@ -125,7 +129,14 @@ namespace Crockhead.Core
 				while (m_PendingQueue.Count > 0)
 				{
 					var operation = m_PendingQueue.Peek();
-					
+
+					// 명령 객체가 없거나 파괴된 경우.
+					if (operation == null || operation.IsDisposed)
+					{
+						m_PendingQueue.Dequeue();
+						continue;
+					}
+
 					// 시작되지 않았을 때.
 					if (!operation.IsStarted)
 					{
