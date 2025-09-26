@@ -41,3 +41,4 @@ using Crockhead.Logging;
 |Operation|다양한 처리 명령. (비동기 명령 처리, 순차적인 명령 보류 처리 등)|
 |Registration|타입 별 고유 인스턴스 등록 및 보관 기능.| 
 |Shared|인스턴스 캐시 및 싱글톤 기능 등.|
+
