@@ -10,14 +10,14 @@ namespace Crockhead.Core
 	public class LockedList<T>
 	{
 		/// <summary>
-		/// 리스트.
-		/// </summary>
-		private List<T> m_Items;
-
-		/// <summary>
 		/// 락 오브젝트.
 		/// </summary>
 		private object m_Lock;
+
+		/// <summary>
+		/// 리스트.
+		/// </summary>
+		private List<T> m_Items;
 
 		/// <summary>
 		/// 인덱서 프로퍼티.

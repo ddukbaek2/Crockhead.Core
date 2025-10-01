@@ -187,19 +187,19 @@ namespace Crockhead.Core
 			}
 		}
 
-		/// <summary>
-		/// 대기.
-		/// </summary>
-		public virtual void WaitForCompletion()
-		{
-			if (!m_IsStarted)
-				return;
+		///// <summary>
+		///// 대기.
+		///// </summary>
+		//public virtual void WaitForCompletion()
+		//{
+		//	if (!m_IsStarted)
+		//		return;
 
-			while (!m_IsCompleted)
-			{
-				Thread.Sleep(1);
-			}
-		}
+		//	while (!m_IsCompleted)
+		//	{
+		//		Thread.Sleep(1);
+		//	}
+		//}
 
 		/// <summary>
 		/// 명령 완료.
