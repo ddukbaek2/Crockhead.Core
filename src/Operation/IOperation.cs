@@ -8,46 +8,52 @@ namespace Crockhead.Core
 	public interface IOperation : IDisposable
 	{
 		/// <summary>
-		/// 진행 중 프로퍼티.
-		/// </summary>
-		public bool IsRunning { get; }
-
-		/// <summary>
 		/// 시작 여부 프로퍼티.
-		/// <para>한번이라도 Start()를 호출하면 이후 Reset() 전까지는 계속 참을 반환.</para>
+		/// <para>Start() 호출 이후 Reset() 호출 전까지는 계속 True.</para>
 		/// </summary>
 		bool IsStarted { get; }
 
 		/// <summary>
-		/// 완료 여부 프로퍼티. (IsCompletedSuccessfully)
-		/// <para>한번이라도 Complete() or Cancel()을 호출하면 이후 Reset() 전까지는 계속 참을 반환.</para>
+		/// 진행 중 여부 프로퍼티.
+		/// <para>IsStarted + IsCompleted</para>
+		/// </summary>
+		bool IsRunning { get; }
+
+		/// <summary>
+		/// 완료 여부 프로퍼티. (=Task.IsCompleted)
+		/// <para>Start() 호출 이후 Success(), Fail(), Cancel() 호출 이후 Reset() 호출 전까지는 계속 True.</para>
 		/// </summary>
 		bool IsCompleted { get; }
 
 		/// <summary>
-		/// 완료 + 성공 여부 프로퍼티.
+		/// 완료 + 성공 여부 프로퍼티. (=Task.IsCompletedSuccessfully)
+		/// <para>Success() 호출 이후 True.</para>
 		/// </summary>
 		bool IsSucceeded { get; }
 
 		/// <summary>
-		/// 완료 + 실패 여부 프로퍼티.
+		/// 완료 + 실패 여부 프로퍼티. (=Task.IsFaulted)
+		/// <para>Fail() 호출 이후 True.</para>
 		/// </summary>
 		bool IsFaulted { get; }
 
 		/// <summary>
-		/// 완료 + 취소 여부 프로퍼티.
+		/// 완료 + 취소 여부 프로퍼티. (=Task.IsCanceled)
+		/// <para>Cancel() 호출 이후 True.</para>
 		/// </summary>
 		bool IsCanceled { get; }
 
 		/// <summary>
-		/// 실패 예외 프로퍼티.
+		/// 실패 시 예외 프로퍼티.
+		/// <para>Fail() 호출시 입력한 Exception.</para>
 		/// </summary>
 		Exception Exception { get; }
 
 		/// <summary>
-		/// 재사용 할 수 있도록 초기화.
+		/// 상태 프로퍼티.
+		/// <para>IsStarted, IsCompleted, IsSucceeded, IsFaulted, IsCanceled에 의한 현재 상황.</para>
 		/// </summary>
-		void Reset();
+		OperationStatus Status { get; }
 
 		/// <summary>
 		/// 명령 설정.
@@ -58,6 +64,11 @@ namespace Crockhead.Core
 		/// 명령 설정.
 		/// </summary>
 		void SetCompletion(Action<IOperation> completion);
+
+		/// <summary>
+		/// 재초기화.
+		/// </summary>
+		void Reset();
 
 		/// <summary>
 		/// 시작.
