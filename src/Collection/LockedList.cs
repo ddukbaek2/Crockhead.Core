@@ -12,12 +12,12 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 락 오브젝트.
 		/// </summary>
-		private object m_Lock;
+		private readonly object m_Lock;
 
 		/// <summary>
 		/// 리스트.
 		/// </summary>
-		private List<T> m_Items;
+		private readonly List<T> m_Items;
 
 		/// <summary>
 		/// 인덱서 프로퍼티.

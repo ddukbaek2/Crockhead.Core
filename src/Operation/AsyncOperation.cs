@@ -7,7 +7,7 @@ namespace Crockhead.Core
 	/// <summary>
 	/// 비동기 오퍼레이션.
 	/// </summary>
-	public class AsyncOperation : Operation
+	public class AsyncOperation : Operation, IAsyncOperation
 	{
 		/// <summary>
 		/// 생성됨.

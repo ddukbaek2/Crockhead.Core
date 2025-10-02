@@ -64,11 +64,6 @@ namespace Crockhead.Core
 		/// </summary>
 		void Start();
 
-		///// <summary>
-		///// 대기.
-		///// </summary>
-		//void WaitForCompletion();
-
 		/// <summary>
 		/// 성공.
 		/// </summary>
