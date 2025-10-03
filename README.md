@@ -26,6 +26,7 @@ Install-Package Crockhead.Core
 ~~~cs
 using Crockhead.Core;
 using Crockhead.Logging;
+using Crockhead.Experimental
 ~~~
 
 ## 디렉토리 별 기능 목록 (최신 버전 기준)

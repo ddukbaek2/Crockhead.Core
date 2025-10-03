@@ -1,25 +1,51 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
 	<PropertyGroup>
-		<Title>Crockhead.Core</Title>
+		<Version>0.0.10</Version>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<Nullable>disable</Nullable>
+		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<PackageId>Crockhead.Core</PackageId>
-		<Version>0.0.9</Version>
+		<Product>$(PackageId)</Product>
+		<Title>$(PackageId)</Title>
+		<AssemblyName>$(PackageId)</AssemblyName>
+		<Company>Crockhead Studio</Company>		
 		<Authors>ddukbaek2</Authors>
 		<Description>Lightweight C# base library providing structured and reusable core components. Targets .NET Standard 2.1 with no external dependencies.</Description>
-		<TargetFramework>netstandard2.1</TargetFramework>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/ddukbaek2/Crockhead.Core.git</RepositoryUrl>
-		<ProjectUrl>https://github.com/ddukbaek2/Crockhead.Core</ProjectUrl>
 		<LicenseExpression>MIT</LicenseExpression>
 		<PackageTags>core;utility;base</PackageTags>
-		<Nullable>disable</Nullable>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageProjectUrl>https://github.com/ddukbaek2/Crockhead.Core</PackageProjectUrl>
+		<ProjectUrl>$(PackageProjectUrl)</ProjectUrl>
+		<PackageDirectory>$(MSBuildProjectDirectory)\bin\$(Configuration)\</PackageDirectory>
+		<DeployOnBuild>True</DeployOnBuild>
+		<DistOnPack>True</DistOnPack>
+		<OutputDir>$(MSBuildProjectDirectory)\bin\$(Configuration)\$(TargetFramework)\</OutputDir>
+		<LibraryFilePath>$(OutputDir)$(AssemblyName).dll</LibraryFilePath>
+		<DocumentFilePath>$(OutputDir)$(AssemblyName).xml</DocumentFilePath>
 	</PropertyGroup>
+
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
-	<Target Name="GetVersion">
-	  <Message Importance="High" Text="$(Version)" />
+
+	<Target Name="RemoveAllPackages" BeforeTargets="Build;Pack">
+		<ItemGroup>
+			<PackageFilePattern Include="$(PackageDirectory)*.nupkg" />
+			<SymbolPackageFilePattern Include="$(PackageDirectory)*.snupkg" />
+		</ItemGroup>
+		<Delete Files="@(PackageFilePattern);@(SymbolPackageFilePattern)" />
 	</Target>
+
+	<Target Name="Deployment" AfterTargets="Build" Condition="'$(Configuration)'=='Release' and '$(DeployOnBuild)'=='True'">
+		<Exec Command="deployment.bat $(DocumentFilePath) $(LibraryFilePath)" WorkingDirectory="$(ProjectDir)" />
+	</Target>
+	<Target Name="Distribution" AfterTargets="Pack" Condition="'$(Configuration)'=='Release' and '$(DistOnPack)'=='True'">
+		<Exec Command="distribution.bat" WorkingDirectory="$(ProjectDir)" />
+	</Target>
+
 </Project>
