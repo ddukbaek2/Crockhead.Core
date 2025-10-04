@@ -11,7 +11,7 @@ set COPYFILES=Crockhead.Core.dll Crockhead.Core.xml
 echo --------------------------------------------------------------------------------
 echo CURRENT_DIRECTORY: %CURRENT_DIRECTORY%
 echo SOURCE_DIRECTORY: %SOURCE_DIRECTORY%
-echo DESTINATION_DIRECTORY: %DESTINATION_DIRECTORY%
+:: echo DESTINATION_DIRECTORY: %DESTINATION_DIRECTORY%
 
 echo --------------------------------------------------------------------------------
 :: for %%F in (%COPYFILES%) do (
@@ -19,6 +19,13 @@ echo ---------------------------------------------------------------------------
 :: 	echo FILEPATH: !FILEPATH!
 :: 	xcopy /y "!FILEPATH!" "%DESTINATION_DIRECTORY%\"
 :: )
+set DESTINATION_DIRECTORY=D:\Github\IdleGame\Assets\Plugins\Crockhead
+for %%F in (%*) do (
+ 	set FILEPATH=%%F
+ 	echo FILEPATH: !FILEPATH!
+ 	xcopy /y "!FILEPATH!" "!DESTINATION_DIRECTORY!\"
+)
+set DESTINATION_DIRECTORY=D:\Github\MillenniumOfCultivation\Assets\Plugins
 for %%F in (%*) do (
  	set FILEPATH=%%F
  	echo FILEPATH: !FILEPATH!
