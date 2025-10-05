@@ -11,7 +11,7 @@
 		<Product>$(PackageId)</Product>
 		<Title>$(PackageId)</Title>
 		<AssemblyName>$(PackageId)</AssemblyName>
-		<Company>Crockhead Studio</Company>		
+		<Company>Crockhead Studio</Company>
 		<Authors>ddukbaek2</Authors>
 		<Description>Lightweight C# base library providing structured and reusable core components. Targets .NET Standard 2.1 with no external dependencies.</Description>
 		<RepositoryType>git</RepositoryType>
