@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<Version>0.0.11</Version>
+		<Version>0.0.13</Version>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<Nullable>disable</Nullable>
 		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
@@ -16,7 +16,9 @@
 		<Description>Lightweight C# base library providing structured and reusable core components. Targets .NET Standard 2.1 with no external dependencies.</Description>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/ddukbaek2/Crockhead.Core.git</RepositoryUrl>
-		<LicenseExpression>MIT</LicenseExpression>
+		<!-- <PackageLicenseExpression>MIT</PackageLicenseExpression> -->
+		<!-- <LicenseExpression>$(PackageLicenseExpression)</LicenseExpression> -->
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageTags>core;utility;base</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageProjectUrl>https://github.com/ddukbaek2/Crockhead.Core</PackageProjectUrl>
@@ -31,6 +33,7 @@
 
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="LICENSE" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 	<Target Name="RemoveAllPackages" BeforeTargets="Build;Pack">
