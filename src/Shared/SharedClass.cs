@@ -56,7 +56,7 @@ namespace Crockhead.Core
 		/// </summary>
 		protected override void OnDispose(bool explicitDisposing)
 		{
-			/// 현재 인스턴스가 공유 인스턴스가 아니면 제외.
+			// 현재 인스턴스가 공유 인스턴스가 아니면 제외.
 			if (!SharedClass<TClass>.IsSharedInstance((TClass)this))
 				return;
 
