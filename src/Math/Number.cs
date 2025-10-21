@@ -12,6 +12,11 @@ namespace Crockhead.Core
 	public readonly struct Number : IEquatable<Number>
 	{
 		/// <summary>
+		/// 제로 프로퍼티.
+		/// </summary>
+		public static readonly Number Zero = new Number(0);
+
+		/// <summary>
 		/// 분자 프로퍼티.
 		/// </summary>
 		public BigInteger Numerator { get; }
