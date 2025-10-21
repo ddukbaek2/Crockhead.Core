@@ -47,9 +47,9 @@ namespace Crockhead.Core
 				var returnValue = Activator.CreateInstance(instanceType, bindingFlags, null, arguments, null);
 				return returnValue;
 			}
-			catch (Exception exception)
+			catch
 			{
-				throw exception;
+				throw;
 			}
 		}
 
@@ -72,9 +72,9 @@ namespace Crockhead.Core
 				var returnValue = methodInfo.Invoke(instance, parameters);
 				return returnValue;
 			}
-			catch (Exception exception)
+			catch
 			{
-				throw exception;
+				throw;
 			}
 		}
 
@@ -96,9 +96,9 @@ namespace Crockhead.Core
 				var returnValue = method.Invoke(instanceType, parameters);
 				return returnValue;
 			}
-			catch (Exception exception)
+			catch
 			{
-				throw exception;
+				throw;
 			}
 		}
 
@@ -118,9 +118,9 @@ namespace Crockhead.Core
 					return false;
 				return true;
 			}
-			catch (Exception exception)
+			catch
 			{
-				throw exception;
+				throw;
 			}
 		}
 	}

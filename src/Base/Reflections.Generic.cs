@@ -22,9 +22,9 @@ namespace Crockhead.Core
 					return default;
 				return (T)returnValue;
 			}
-			catch (Exception exception)
+			catch
 			{
-				throw exception;
+				throw;
 			}
 		}
 
@@ -40,9 +40,9 @@ namespace Crockhead.Core
 					return default;
 				return (TReturnValue)returnValue;
 			}
-			catch (Exception exception)
+			catch
 			{
-				throw exception;
+				throw;
 			}
 		}
 
@@ -59,9 +59,9 @@ namespace Crockhead.Core
 				attribute = (TAttribute)attrib;
 				return true;
 			}
-			catch (Exception exception)
+			catch
 			{
-				throw exception;
+				throw;
 			}
 		}
 

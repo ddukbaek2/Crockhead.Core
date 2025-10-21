@@ -12,18 +12,12 @@ namespace Crockhead.Core
 	/// <para>교집합: A - (A - B)</para>
 	/// <para>대칭차집합: (A - B) + (B - A)</para>
 	/// </summary>
-	public sealed class Group<TElement> : Disposable, IEnumerable<TElement>
+	public sealed class Group<T> : Disposable, IEnumerable<T> // IEquatable<Group<T>>, IReadOnlyCollection<T>
 	{
 		/// <summary>
 		/// 집합 컬렉션.
 		/// </summary>
-		//private HashSet<TElement> m_Values;
-		private List<TElement> m_Values;
-
-		///// <summary>
-		///// 해시코드.
-		///// </summary>
-		//private HashCode m_HashCode;
+		private HashSet<T> m_Values;
 
 		/// <summary>
 		/// 전체 요소 수 프로퍼티.
@@ -33,35 +27,32 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 집합 컬렉션 프로퍼티.
 		/// </summary>
-		public IEnumerable<TElement> Values => m_Values;
-
-		/// <summary>
-		/// 인덱서 프로퍼티.
-		/// </summary>
-		public TElement this[int index]
-		{
-			get
-			{
-				//var value = Collections.ValueOf(m_Values, index);
-				//return value;
-				return m_Values[index];
-			}
-		}
+		public IEnumerable<T> Values => m_Values;
 
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
 		public Group() : base()
 		{
-			//m_Values = new HashSet<TElement>();
-			m_Values = new List<TElement>();
-			//m_HashCode = new HashCode();
+			m_Values = new HashSet<T>();
 		}
 
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
-		public Group(TElement value) : this()
+		public Group(Group<T> group) : this()
+		{
+			if (group == null)
+				throw new ArgumentNullException(nameof(group));
+
+			//m_Values = new HashSet<T>(group.m_Values, group.m_Values.Comparer);
+			AddRange(group);
+		}
+
+		/// <summary>
+		/// 생성됨.
+		/// </summary>
+		public Group(T value) : this()
 		{
 			Add(value);
 		}
@@ -69,17 +60,12 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
-		public Group(IEnumerable<TElement> values) : this()
+		public Group(IEnumerable<T> values) : this()
 		{
-			AddRange(values);
-		}
+			if (values == null)
+				throw new ArgumentNullException(nameof(values));
 
-		/// <summary>
-		/// 생성됨.
-		/// </summary>
-		public Group(Group<TElement> group) : this()
-		{
-			AddRange(group);
+			AddRange(values);
 		}
 
 		/// <summary>
@@ -92,21 +78,20 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 추가.
 		/// </summary>
-		public bool Add(TElement value)
+		public bool Add(T value)
 		{
-			var contains = Contains(value);
-			if (contains)
-				return false;
-			
-			m_Values.Add(value);
-			return true;
+			var added = m_Values.Add(value);
+			return added;
 		}
 
 		/// <summary>
 		/// 추가.
 		/// </summary>
-		public void AddRange(IEnumerable<TElement> values)
+		public void AddRange(IEnumerable<T> values)
 		{
+			if (values == null)
+				throw new ArgumentNullException(nameof(values));
+
 			foreach (var value in values)
 			{
 				Add(value);
@@ -116,7 +101,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 제거.
 		/// </summary>
-		public bool Remove(TElement value)
+		public bool Remove(T value)
 		{
 			var removed = m_Values.Remove(value);
 			return removed;
@@ -125,8 +110,11 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 제거.
 		/// </summary>
-		public void RemoveRange(IEnumerable<TElement> values)
+		public void RemoveRange(IEnumerable<T> values)
 		{
+			if (values == null)
+				throw new ArgumentNullException(nameof(values));
+
 			foreach (var value in values)
 			{
 				Remove(value);
@@ -136,7 +124,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 포함 되어있는지 여부.
 		/// </summary>
-		public bool Contains(TElement value)
+		public bool Contains(T value)
 		{
 			var contains = m_Values.Contains(value);
 			return contains;
@@ -145,7 +133,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 열거자 반환.
 		/// </summary>
-		public IEnumerator<TElement> GetEnumerator()
+		public IEnumerator<T> GetEnumerator()
 		{
 			return Values.GetEnumerator();
 		}
@@ -161,49 +149,17 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 동일 여부. (포함된 요소가 모두 동일하면 동일 판단)
 		/// </summary>
-		public bool Equals(Group<TElement> other)
+		public bool Equals(Group<T> other)
 		{
-			var count = m_Values.Count;
-
-			// 요소의 수가 다르다면 동일하지 않음 판단.
-			if (count != other.m_Values.Count)
+			if (other == null)
 				return false;
 
-			// other에 포함되지 않은 자신의 요소 발견 시 동일하지 않음 판단.
-			for (var i = 0; i < count; ++i)
-			{
-				var value = m_Values[i];
-				if (other.Contains(value))
-					continue;
+			// 동일 객체.
+			if (ReferenceEquals(this, other))
+				return true;
 
-				return false;
-			}
-
-			// 자신에게 포함되지 않은 other의 요소 발견 시 동일하지 않음 판단.
-			for (var i = 0; i < count; ++i)
-			{
-				var value = other.m_Values[i];
-				if (m_Values.Contains(value))
-					continue;
-
-				return false;
-			}
-
-			return true;
-		}
-
-		/// <summary>
-		/// 해시코드 변환.
-		/// </summary>
-		public int ToHashCode()
-		{
-			var hashCode = new HashCode();
-			foreach (var value in m_Values)
-			{
-				hashCode.Add(value);
-			}
-
-			return hashCode.ToHashCode();
+			var equals = m_Values.SetEquals(other);
+			return equals;
 		}
 
 		/// <summary>
@@ -211,7 +167,7 @@ namespace Crockhead.Core
 		/// </summary>
 		public override bool Equals(object obj)
 		{
-			if (obj is Group<TElement> other)
+			if (obj != null && obj is Group<T> other)
 			{
 				return Equals(other);
 			}
@@ -224,7 +180,7 @@ namespace Crockhead.Core
 		/// </summary>
 		public override int GetHashCode()
 		{
-			return ToHashCode();
+			return Group<T>.CreateHashCode(this);
 		}
 
 		/// <summary>
@@ -238,7 +194,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 비교 연산.
 		/// </summary>
-		public static bool operator ==(Group<TElement> left, Group<TElement> right)
+		public static bool operator ==(Group<T> left, Group<T> right)
 		{
 			return left.Equals(right);
 		}
@@ -246,7 +202,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 비교 연산.
 		/// </summary>
-		public static bool operator !=(Group<TElement> left, Group<TElement> right)
+		public static bool operator !=(Group<T> left, Group<T> right)
 		{
 			return !left.Equals(right);
 		}
@@ -254,50 +210,177 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 더하기 연산.
 		/// </summary>
-		public static Group<TElement> operator +(Group<TElement> left, Group<TElement> right)
+		public static Group<T> operator +(Group<T> left, Group<T> right)
 		{
-			var group = new Group<TElement>();
-			group.AddRange(left);
-			group.AddRange(right);
+			var group = Group<T>.Add(left, right);
+			return group;
+		}
+
+		/// <summary>
+		/// 더하기 연산.
+		/// </summary>
+		public static Group<T> operator +(Group<T> left, IEnumerable<T> right)
+		{
+			var group = Group<T>.Add(left, right);
 			return group;
 		}
 
 		/// <summary>
 		/// 빼기 연산.
 		/// </summary>
-		public static Group<TElement> operator -(Group<TElement> left, Group<TElement> right)
+		public static Group<T> operator -(Group<T> left, Group<T> right)
 		{
-			var group = new Group<TElement>();
-			group.AddRange(left);
-			group.RemoveRange(right);
+			var group = Group<T>.Subtract(left, right);
 			return group;
 		}
 
 		/// <summary>
-		/// 형변환 연산.
+		/// 빼기 연산.
 		/// </summary>
-		public static implicit operator Group<TElement>(TElement value)
+		public static Group<T> operator -(Group<T> left, IEnumerable<T> right)
 		{
-			var group = new Group<TElement>();
-			group.Add(value);
+			var group = Group<T>.Subtract(left, right);
+			return group;
+		}
+
+		///// <summary>
+		///// 형변환 연산.
+		///// </summary>
+		//public static implicit operator Group<T>(T value)
+		//{
+		//	var group = new Group<T>();
+		//	group.Add(value);
+		//	return group;
+		//}
+
+		///// <summary>
+		///// 형변환 연산. (첫번째 요소)
+		///// </summary>
+		//public static implicit operator T(Group<T> group)
+		//{
+		//	return Collections.FirstOrDefault(group);
+		//}
+
+		///// <summary>
+		///// 형변환 연산. (집합)
+		///// </summary>
+		//public static implicit operator T[](Group<T> group)
+		//{
+		//	var list = Collections.ToList(group);
+		//	return Collections.ToArray(list);
+		//}
+
+		/// <summary>
+		/// 그룹 생성.
+		/// </summary>
+		public static Group<T> Create()
+		{
+			return new Group<T>();
+		}
+
+		/// <summary>
+		/// 그룹 생성.
+		/// </summary>
+		public static Group<T> Create(T value)
+		{
+			return new Group<T>(value);
+		}
+
+		/// <summary>
+		/// 그룹 생성.
+		/// </summary>
+		public static Group<T> Create(IEnumerable<T> enumerable)
+		{
+			if (enumerable == null)
+				return new Group<T>();
+			return new Group<T>(enumerable);
+		}
+
+		/// <summary>
+		/// 합집합.
+		/// </summary>
+		public static Group<T> Add(IEnumerable<T> left, IEnumerable<T> right)
+		{
+			var group = new Group<T>();
+			if (left != null)
+				group.AddRange(left);
+			if (right != null)
+				group.AddRange(right);
 			return group;
 		}
 
 		/// <summary>
-		/// 형변환 연산. (첫번째 요소)
+		/// 차집합.
 		/// </summary>
-		public static implicit operator TElement(Group<TElement> group)
+		public static Group<T> Subtract(IEnumerable<T> left, IEnumerable<T> right)
 		{
-			return Collections.FirstOrDefault(group);
+			var group = new Group<T>();
+			if (left != null)
+				group.AddRange(left);
+			if (right != null) 
+				group.RemoveRange(right);
+			return group;
 		}
 
 		/// <summary>
-		/// 형변환 연산. (집합)
+		/// 해시코드 생성.
 		/// </summary>
-		public static implicit operator TElement[](Group<TElement> group)
+		public static int CreateHashCode(Group<T> group)
 		{
-			var list = Collections.ToList(group);
-			return Collections.ToArray(list);
+			if (group == null)
+				return 0;
+
+			var comparer = group.m_Values.Comparer != null ? (IComparer<T>)group.m_Values.Comparer : Comparer<T>.Default;
+			return Group<T>.CreateHashCode(group, comparer);
+		}
+
+		/// <summary>
+		/// 해시코드 생성.
+		/// </summary>
+		public static int CreateHashCode(Group<T> group, IComparer<T> comparer)
+		{
+			try
+			{
+				if (group == null)
+					return 0;
+
+				var hashCode = new HashCode();
+				var values = new List<T>(group.m_Values);
+				if (comparer == null)
+				{
+					// T에 IComparable 없으면 Exception.
+					values.Sort();
+				}
+				else
+				{
+					values.Sort(comparer);
+				}
+
+				foreach (var value in values)
+				{
+					hashCode.Add(value);
+				}
+
+				return hashCode.ToHashCode();
+			}
+			catch
+			{
+				// 순서 무시 해시 생성.
+				unchecked
+				{
+					var xor = 0;
+					var sum = 0;
+					var prod = 1;
+					foreach (var v in group.m_Values)
+					{
+						var hashCode = EqualityComparer<T>.Default.GetHashCode(v);
+						xor ^= hashCode;
+						sum += hashCode * 16777619;
+						prod = (prod * 1099511627) ^ hashCode;
+					}
+					return ((xor * 31) ^ sum) ^ (prod * 17) ^ group.m_Values.Count;
+				}
+			}
 		}
 	}
 }
