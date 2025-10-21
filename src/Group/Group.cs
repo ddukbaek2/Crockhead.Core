@@ -11,6 +11,7 @@ namespace Crockhead.Core
 	/// <para>차집합: A - B</para>
 	/// <para>교집합: A - (A - B)</para>
 	/// <para>대칭차집합: (A - B) + (B - A)</para>
+	/// <para>동등성 비교 할 경우 T는 IComparable 구현 필요.</para>
 	/// </summary>
 	public sealed class Group<T> : Disposable, IEnumerable<T> // IEquatable<Group<T>>, IReadOnlyCollection<T>
 	{
@@ -147,29 +148,13 @@ namespace Crockhead.Core
 		}
 
 		/// <summary>
-		/// 동일 여부. (포함된 요소가 모두 동일하면 동일 판단)
-		/// </summary>
-		public bool Equals(Group<T> other)
-		{
-			if (other == null)
-				return false;
-
-			// 동일 객체.
-			if (ReferenceEquals(this, other))
-				return true;
-
-			var equals = m_Values.SetEquals(other);
-			return equals;
-		}
-
-		/// <summary>
 		/// 동일 여부.
 		/// </summary>
 		public override bool Equals(object obj)
 		{
 			if (obj != null && obj is Group<T> other)
 			{
-				return Equals(other);
+				return Group<T>.Equals(this, other);
 			}
 
 			return base.Equals(obj);
@@ -196,7 +181,7 @@ namespace Crockhead.Core
 		/// </summary>
 		public static bool operator ==(Group<T> left, Group<T> right)
 		{
-			return left.Equals(right);
+			return Group<T>.Equals(left, right);
 		}
 
 		/// <summary>
@@ -204,7 +189,7 @@ namespace Crockhead.Core
 		/// </summary>
 		public static bool operator !=(Group<T> left, Group<T> right)
 		{
-			return !left.Equals(right);
+			return !Group<T>.Equals(left, right);
 		}
 
 		/// <summary>
@@ -323,19 +308,42 @@ namespace Crockhead.Core
 		}
 
 		/// <summary>
-		/// 해시코드 생성.
+		/// 동일 여부. (포함된 요소가 모두 동일하면 동일 판단)
+		/// </summary>
+		public static bool Equals(Group<T> left, Group<T> right)
+		{
+			if (left == null && right == null)
+			{
+				return true;
+			}
+			else if (left == null || right == null)
+			{
+				return false;
+			}
+			else
+			{
+				// 동일 객체.
+				if (ReferenceEquals(left, right))
+					return true;
+
+				var equals = left.m_Values.SetEquals(right.m_Values);
+				return equals;
+			}
+		}
+
+		/// <summary>
+		/// 해시 코드 생성.
 		/// </summary>
 		public static int CreateHashCode(Group<T> group)
 		{
 			if (group == null)
 				return 0;
 
-			var comparer = group.m_Values.Comparer != null ? (IComparer<T>)group.m_Values.Comparer : Comparer<T>.Default;
-			return Group<T>.CreateHashCode(group, comparer);
+			return Group<T>.CreateHashCode(group, Comparer<T>.Default);
 		}
 
 		/// <summary>
-		/// 해시코드 생성.
+		/// 해시 코드 생성.
 		/// </summary>
 		public static int CreateHashCode(Group<T> group, IComparer<T> comparer)
 		{
@@ -365,21 +373,36 @@ namespace Crockhead.Core
 			}
 			catch
 			{
-				// 순서 무시 해시 생성.
-				unchecked
+				// 순서 없는 해시 코드 생성.
+				return Group<T>.CreateUnorderedHashCode(group);
+			}
+		}
+
+		/// <summary>
+		/// 순서 없는 해시 코드 생성.
+		/// </summary>
+		public static int CreateUnorderedHashCode(IEnumerable<T> enumerable)
+		{
+			if (enumerable == null)
+				return 0;
+
+			unchecked
+			{
+				var xor = 0;
+				var sum = 0;
+				var prod = 1;
+				var increase = 0;
+				foreach (var value in enumerable)
 				{
-					var xor = 0;
-					var sum = 0;
-					var prod = 1;
-					foreach (var v in group.m_Values)
-					{
-						var hashCode = EqualityComparer<T>.Default.GetHashCode(v);
-						xor ^= hashCode;
-						sum += hashCode * 16777619;
-						prod = (prod * 1099511627) ^ hashCode;
-					}
-					return ((xor * 31) ^ sum) ^ (prod * 17) ^ group.m_Values.Count;
+					var hashCode = EqualityComparer<T>.Default.GetHashCode(value);
+					xor ^= hashCode;
+					sum += hashCode * 16777619;
+					prod = (prod * 1099511627) ^ hashCode;
+
+					++increase;
 				}
+
+				return ((xor * 31) ^ sum) ^ (prod * 17) ^ increase;
 			}
 		}
 	}
