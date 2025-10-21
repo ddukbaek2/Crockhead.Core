@@ -11,7 +11,7 @@ namespace Crockhead.Core
 	/// <para>차집합: A - B</para>
 	/// <para>교집합: A - (A - B)</para>
 	/// <para>대칭차집합: (A - B) + (B - A)</para>
-	/// <para>동등성 비교 할 경우 T는 IComparable 구현 필요.</para>
+	/// <para>해시 비교 할 경우 T의 순서 정렬을 위해 IComparable 구현 필요.</para>
 	/// </summary>
 	public sealed class Group<T> : Disposable, IEnumerable<T> // IEquatable<Group<T>>, IReadOnlyCollection<T>
 	{
@@ -291,6 +291,11 @@ namespace Crockhead.Core
 				group.AddRange(left);
 			if (right != null)
 				group.AddRange(right);
+			//if (left != null)
+			//	group.m_Values.UnionWith(left);
+			//if (right != null)
+			//	group.m_Values.UnionWith(right);
+
 			return group;
 		}
 
@@ -304,6 +309,11 @@ namespace Crockhead.Core
 				group.AddRange(left);
 			if (right != null) 
 				group.RemoveRange(right);
+			//if (left != null)
+			//	group.m_Values.UnionWith(left);
+			//if (right != null)
+			//	group.m_Values.ExceptWith(right);
+
 			return group;
 		}
 
