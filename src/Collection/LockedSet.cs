@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,9 +108,10 @@ namespace Crockhead.Core
 		/// </summary>
 		public void UnionWith(IEnumerable<T> other)
 		{
+			var snapshot = CreateSnapshot(other);
 			lock (m_Lock)
 			{
-				m_Values.UnionWith(other);
+				m_Values.UnionWith(snapshot);
 			}
 		}
 
@@ -118,9 +120,10 @@ namespace Crockhead.Core
 		/// </summary>
 		public void IntersectWith(IEnumerable<T> other)
 		{
+			var snapshot = CreateSnapshot(other);
 			lock (m_Lock)
 			{
-				m_Values.IntersectWith(other);
+				m_Values.IntersectWith(snapshot);
 			}
 		}
 
@@ -129,9 +132,10 @@ namespace Crockhead.Core
 		/// </summary>
 		public void ExceptWith(IEnumerable<T> other)
 		{
+			var snapshot = CreateSnapshot(other);
 			lock (m_Lock)
 			{
-				m_Values.ExceptWith(other);
+				m_Values.ExceptWith(snapshot);
 			}
 		}
 
@@ -140,9 +144,10 @@ namespace Crockhead.Core
 		/// </summary>
 		public void SymmetricExceptWith(IEnumerable<T> other)
 		{
+			var snapshot = CreateSnapshot(other);
 			lock (m_Lock)
 			{
-				m_Values.SymmetricExceptWith(other);
+				m_Values.SymmetricExceptWith(snapshot);
 			}
 		}
 
@@ -151,9 +156,10 @@ namespace Crockhead.Core
 		/// </summary>
 		public bool IsSubsetOf(IEnumerable<T> other)
 		{
+			var snapshot = CreateSnapshot(other);
 			lock (m_Lock)
 			{
-				return m_Values.IsSubsetOf(other);
+				return m_Values.IsSubsetOf(snapshot);
 			}
 		}
 
@@ -162,9 +168,10 @@ namespace Crockhead.Core
 		/// </summary>
 		public bool IsSupersetOf(IEnumerable<T> other)
 		{
+			var snapshot = CreateSnapshot(other);
 			lock (m_Lock)
 			{
-				return m_Values.IsSupersetOf(other);
+				return m_Values.IsSupersetOf(snapshot);
 			}
 		}
 
@@ -173,9 +180,10 @@ namespace Crockhead.Core
 		/// </summary>
 		public bool Overlaps(IEnumerable<T> other)
 		{
+			var snapshot = CreateSnapshot(other);
 			lock (m_Lock)
 			{
-				return m_Values.Overlaps(other);
+				return m_Values.Overlaps(snapshot);
 			}
 		}
 
@@ -184,9 +192,10 @@ namespace Crockhead.Core
 		/// </summary>
 		public bool SetEquals(IEnumerable<T> other)
 		{
+			var snapshot = CreateSnapshot(other);
 			lock (m_Lock)
 			{
-				return m_Values.SetEquals(other);
+				return m_Values.SetEquals(snapshot);
 			}
 		}
 
@@ -223,6 +232,22 @@ namespace Crockhead.Core
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
+		}
+
+		/// <summary>
+		/// 반복자의 스냅샷 생성.
+		/// </summary>
+		public static T[] CreateSnapshot(IEnumerable<T> enumerable)
+		{
+			if (enumerable == null)
+				throw new ArgumentNullException(nameof(enumerable));
+
+			if (enumerable is LockedSet<T> set)
+			{
+				return set.ToArray();
+			}
+
+			return enumerable.ToArray();
 		}
 	}
 }
