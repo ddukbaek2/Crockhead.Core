@@ -9,13 +9,8 @@ namespace Crockhead.Core
 	/// <summary>
 	/// 스레드 안전한 해시셋. (Lock 기반)
 	/// </summary>
-	public class LockedSet<T> : IEnumerable<T>
+	public class LockedSet<T> : LockedCollection<T>
 	{
-		/// <summary>
-		/// 락 오브젝트.
-		/// </summary>
-		private readonly object m_Lock;
-
 		/// <summary>
 		/// 컬렉션.
 		/// </summary>
@@ -24,11 +19,11 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 현재 개수 프로퍼티.
 		/// </summary>
-		public int Count
+		public override int Count
 		{
 			get
 			{
-				lock (m_Lock)
+				using (var lockedScope = CreateLockedScope())
 				{
 					return m_Values.Count;
 				}
@@ -36,34 +31,48 @@ namespace Crockhead.Core
 		}
 
 		/// <summary>
-		/// 값 목록 프로퍼티. (스냅샷)
+		/// 생성됨.
 		/// </summary>
-		public IEnumerable<T> Values
+		public LockedSet() : base()
 		{
-			get
-			{
-				var snapshot = ToArray();
-				return snapshot;
-			}
+			m_Values = new HashSet<T>();
 		}
 
 		/// <summary>
-		/// 생성됨.
+		/// 배열 생성.
 		/// </summary>
-		public LockedSet()
+		public override T[] CreateArray()
 		{
-			m_Lock = new object();
-			m_Values = new HashSet<T>();
+			var snapshot = default(T[]);
+			using (var lockedScope = CreateLockedScope())
+			{
+				snapshot = new T[m_Values.Count];
+				m_Values.CopyTo(snapshot);
+			}
+
+			return snapshot;
 		}
 
 		/// <summary>
 		/// 모든 원소 제거.
 		/// </summary>
-		public void Clear()
+		public override void Clear()
 		{
-			lock (m_Lock)
+			using (var lockedScope = CreateLockedScope())
 			{
 				m_Values.Clear();
+			}
+		}
+
+		/// <summary>
+		/// 원소 포함 여부.
+		/// </summary>
+		public override bool Contains(T value)
+		{
+			using (var lockedScope = CreateLockedScope())
+			{
+				var contains = m_Values.Contains(value);
+				return contains;
 			}
 		}
 
@@ -72,7 +81,7 @@ namespace Crockhead.Core
 		/// </summary>
 		public bool Add(T value)
 		{
-			lock (m_Lock)
+			using (var lockedScope = CreateLockedScope())
 			{
 				var added = m_Values.Add(value);
 				return added;
@@ -84,22 +93,10 @@ namespace Crockhead.Core
 		/// </summary>
 		public bool Remove(T value)
 		{
-			lock (m_Lock)
+			using (var lockedScope = CreateLockedScope())
 			{
 				var removed = m_Values.Remove(value);
 				return removed;
-			}
-		}
-
-		/// <summary>
-		/// 원소 포함 여부.
-		/// </summary>
-		public bool Contains(T value)
-		{
-			lock (m_Lock)
-			{
-				var contains = m_Values.Contains(value);
-				return contains;
 			}
 		}
 
@@ -109,7 +106,7 @@ namespace Crockhead.Core
 		public void UnionWith(IEnumerable<T> other)
 		{
 			var snapshot = CreateSnapshot(other);
-			lock (m_Lock)
+			using (var lockedScope = CreateLockedScope())
 			{
 				m_Values.UnionWith(snapshot);
 			}
@@ -121,7 +118,7 @@ namespace Crockhead.Core
 		public void IntersectWith(IEnumerable<T> other)
 		{
 			var snapshot = CreateSnapshot(other);
-			lock (m_Lock)
+			using (var lockedScope = CreateLockedScope())
 			{
 				m_Values.IntersectWith(snapshot);
 			}
@@ -133,7 +130,7 @@ namespace Crockhead.Core
 		public void ExceptWith(IEnumerable<T> other)
 		{
 			var snapshot = CreateSnapshot(other);
-			lock (m_Lock)
+			using (var lockedScope = CreateLockedScope())
 			{
 				m_Values.ExceptWith(snapshot);
 			}
@@ -145,7 +142,7 @@ namespace Crockhead.Core
 		public void SymmetricExceptWith(IEnumerable<T> other)
 		{
 			var snapshot = CreateSnapshot(other);
-			lock (m_Lock)
+			using (var lockedScope = CreateLockedScope())
 			{
 				m_Values.SymmetricExceptWith(snapshot);
 			}
@@ -157,7 +154,7 @@ namespace Crockhead.Core
 		public bool IsSubsetOf(IEnumerable<T> other)
 		{
 			var snapshot = CreateSnapshot(other);
-			lock (m_Lock)
+			using (var lockedScope = CreateLockedScope())
 			{
 				return m_Values.IsSubsetOf(snapshot);
 			}
@@ -169,7 +166,7 @@ namespace Crockhead.Core
 		public bool IsSupersetOf(IEnumerable<T> other)
 		{
 			var snapshot = CreateSnapshot(other);
-			lock (m_Lock)
+			using (var lockedScope = CreateLockedScope())
 			{
 				return m_Values.IsSupersetOf(snapshot);
 			}
@@ -181,7 +178,7 @@ namespace Crockhead.Core
 		public bool Overlaps(IEnumerable<T> other)
 		{
 			var snapshot = CreateSnapshot(other);
-			lock (m_Lock)
+			using (var lockedScope = CreateLockedScope())
 			{
 				return m_Values.Overlaps(snapshot);
 			}
@@ -193,61 +190,10 @@ namespace Crockhead.Core
 		public bool SetEquals(IEnumerable<T> other)
 		{
 			var snapshot = CreateSnapshot(other);
-			lock (m_Lock)
+			using (var lockedScope = CreateLockedScope())
 			{
 				return m_Values.SetEquals(snapshot);
 			}
-		}
-
-		/// <summary>
-		/// 전체 항목 스냅샷 반환.
-		/// </summary>
-		public T[] ToArray()
-		{
-			var snapshot = default(T[]);
-			lock (m_Lock)
-			{
-				snapshot = new T[m_Values.Count];
-				m_Values.CopyTo(snapshot);
-			}
-
-			return snapshot;
-		}
-
-		/// <summary>
-		/// 반복자 반환.
-		/// </summary>
-		public IEnumerator<T> GetEnumerator()
-		{
-			var snapshot = ToArray();
-			for (var i = 0; i < snapshot.Length; ++i)
-			{
-				yield return snapshot[i];
-			}
-		}
-
-		/// <summary>
-		/// 반복자 반환.
-		/// </summary>
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
-
-		/// <summary>
-		/// 반복자의 스냅샷 생성.
-		/// </summary>
-		public static T[] CreateSnapshot(IEnumerable<T> enumerable)
-		{
-			if (enumerable == null)
-				throw new ArgumentNullException(nameof(enumerable));
-
-			if (enumerable is LockedSet<T> set)
-			{
-				return set.ToArray();
-			}
-
-			return enumerable.ToArray();
 		}
 	}
 }

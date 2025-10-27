@@ -236,7 +236,7 @@ namespace Crockhead.Core
 			if (!m_Dictionary.TryGetValue(key, out var bucket))
 				return Array.Empty<TValue>();
 
-			return bucket.ToArray();
+			return bucket.CreateArray();
 		}
 
 		/// <summary>
@@ -248,7 +248,7 @@ namespace Crockhead.Core
 			var list = new List<TValue>();
 			foreach (var kv in entries)
 			{
-				list.AddRange(kv.Value.ToArray());
+				list.AddRange(kv.Value.CreateArray());
 			}
 
 			return list.ToArray();
@@ -263,7 +263,7 @@ namespace Crockhead.Core
 			var result = new KeyValuePair<TKey, TValue[]>[entries.Length];
 			for (int i = 0; i < entries.Length; i++)
 			{
-				result[i] = new KeyValuePair<TKey, TValue[]>(entries[i].Key, entries[i].Value.ToArray());
+				result[i] = new KeyValuePair<TKey, TValue[]>(entries[i].Key, entries[i].Value.CreateArray());
 			}
 
 			return result;

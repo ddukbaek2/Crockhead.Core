@@ -252,7 +252,7 @@ namespace Crockhead.Core
 		//public static implicit operator T[](Group<T> group)
 		//{
 		//	var list = Collections.ToList(group);
-		//	return Collections.ToArray(list);
+		//	return Collections.CreateArray(list);
 		//}
 
 		/// <summary>

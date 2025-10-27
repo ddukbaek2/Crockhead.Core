@@ -7,7 +7,7 @@ namespace Crockhead.Core
 	/// <summary>
 	/// 쓰레드 안전한 딕셔너리. (Lock 기반)
 	/// </summary>
-	public class LockedDictionary<TKey, TValue>
+	public class LockedDictionary<TKey, TValue>// : LockedCollection<KeyValuePair<TKey, TValue>>
 	{
 		/// <summary>
 		/// 락 오브젝트.
