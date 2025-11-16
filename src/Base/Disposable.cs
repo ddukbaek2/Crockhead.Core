@@ -12,7 +12,7 @@ namespace Crockhead.Core
 	/// <para>IDisposable 인터페이스 구현체.</para>
 	/// <para>ObjectDisposedException는 일단 사용하지 않음.</para>
 	/// </summary>
-	public abstract class Disposable : IDisposable
+	public abstract class Disposable : Object, IDisposable
 	{
 		/// <summary>
 		/// 해제 되었는지 여부.

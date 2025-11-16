@@ -69,7 +69,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 식별자 생성.
 		/// </summary>
-		protected override string CreateIdentifier()
+		protected override string OnCreateIdentifier()
 		{
 			var length = RandomNumberGenerator.GetInt32(m_MinLength, m_MaxLength + 1);
 			m_StringBuilder.Clear();

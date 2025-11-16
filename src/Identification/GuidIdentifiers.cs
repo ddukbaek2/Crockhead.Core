@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 
 namespace Crockhead.Core
@@ -26,7 +26,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 식별자 생성.
 		/// </summary>
-		protected override Guid CreateIdentifier()
+		protected override Guid OnCreateIdentifier()
 		{
 			var identifier = Guid.NewGuid();
 			return identifier;

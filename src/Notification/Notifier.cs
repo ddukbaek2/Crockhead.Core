@@ -14,7 +14,7 @@ namespace Crockhead.Core
 	{
 		/// <summary>
 		/// 메서드 정보 목록. (캐시)
-		/// <para>{ Key: typeof(INotifiable), Value: { Key: typeof(INotification), Value: MethodInfo[] } }</para>
+		/// <para>{ Key: typeof(INotifiable), GetValue: { Key: typeof(INotification), GetValue: MethodInfo[] } }</para>
 		/// </summary>
 		private Dictionary<Type, Dictionary<Type, List<MethodInfo>>> m_CachedDictionary;
 

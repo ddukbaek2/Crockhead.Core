@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 
 
-namespace Crockhead.Core
+namespace Crockhead.Core.Deprecated
 {
 	/// <summary>
 	/// ulong 타입의 고유 식별자 생성기.
@@ -44,7 +44,7 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 식별자 생성.
 		/// </summary>
-		protected override ulong CreateIdentifier()
+		protected override ulong OnCreateIdentifier()
 		{
 			m_RandomNumberGenerator.GetBytes(m_ByteBuffer);
 			var identifier = BitConverter.ToUInt64(m_ByteBuffer);

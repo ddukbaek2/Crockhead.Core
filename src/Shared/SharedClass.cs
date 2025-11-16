@@ -1,12 +1,9 @@
-using Object = Crockhead.Core.Disposable;
-
-
 namespace Crockhead.Core
 {
 	/// <summary>
 	/// 공유 클래스.
 	/// </summary>
-	public class SharedClass<TClass> : Object where TClass : SharedClass<TClass>, new()
+	public class SharedClass<TClass> : Disposable where TClass : SharedClass<TClass>, new()
 	{
 		/// <summary>
 		/// 생성 되었는지 여부 프로퍼티.
