@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<Version>0.0.18</Version>
+		<Version>0.0.19</Version>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<Nullable>disable</Nullable>
 		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
@@ -45,7 +45,7 @@
 		<Delete Files="@(PackageFilePattern);@(SymbolPackageFilePattern)" />
 	</Target>
 
-	<Target Name="Deployment" AfterTargets="Build" Condition="'$(Configuration)'=='Distribution' and '$(DeployOnBuild)'=='True'">
+	<Target Name="Deployment" AfterTargets="Build" Condition="('$(Configuration)'=='Release' or '$(Configuration)'=='Distribution') and '$(DeployOnBuild)'=='True'">
 		<Exec Command="deployment.bat $(DocumentFilePath) $(LibraryFilePath)" WorkingDirectory="$(ProjectDir)" />
 	</Target>
 	<Target Name="Distribution" AfterTargets="Pack" Condition="'$(Configuration)'=='Distribution' and '$(DistOnPack)'=='True'">

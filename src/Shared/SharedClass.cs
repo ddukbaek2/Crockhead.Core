@@ -15,23 +15,23 @@ namespace Crockhead.Core
 		/// </summary>
 		public static TClass Instance => Create();
 
-		/// <summary>
-		/// 현재 인스턴스가 명시적인 생성인지 여부. (직접 Create() 호출)
-		/// </summary>
-		public bool IsExplicitCreated { private set; get; }
+		///// <summary>
+		///// 현재 인스턴스가 명시적인 생성인지 여부. (직접 Create() 호출)
+		///// </summary>
+		//public bool IsExplicitCreated { private set; get; }
 
-		/// <summary>
-		/// 생성시 입력한 아규먼트.
-		/// </summary>
-		public object[] Arguments { private set; get; }
+		///// <summary>
+		///// 생성시 입력한 아규먼트.
+		///// </summary>
+		//public object[] Arguments { private set; get; }
 
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
 		public SharedClass() : base()
 		{
-			IsExplicitCreated = false;
-			Arguments = new object[0];
+			//IsExplicitCreated = false;
+			//Arguments = new object[0];
 
 			// 이미 공유 인스턴스가 존재 할 경우 제외.
 			if (SharedInstances.IsSet<TClass>())
@@ -70,9 +70,9 @@ namespace Crockhead.Core
 				return obj;
 
 			obj = new TClass();
-			obj.IsExplicitCreated = true;
-			obj.Arguments = arguments;
-			obj.OnCreate(arguments);
+			//obj.IsExplicitCreated = true;
+			//obj.Arguments = arguments;
+			//obj.OnCreate(arguments);
 			return obj;
 		}
 
