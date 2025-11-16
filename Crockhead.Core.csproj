@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<Version>0.0.16</Version>
+		<Version>0.0.18</Version>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<Nullable>disable</Nullable>
 		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
@@ -29,6 +29,7 @@
 		<OutputDir>$(MSBuildProjectDirectory)\bin\$(Configuration)\$(TargetFramework)\</OutputDir>
 		<LibraryFilePath>$(OutputDir)$(AssemblyName).dll</LibraryFilePath>
 		<DocumentFilePath>$(OutputDir)$(AssemblyName).xml</DocumentFilePath>
+		<Configurations>Debug;Release;Distribution</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -44,10 +45,10 @@
 		<Delete Files="@(PackageFilePattern);@(SymbolPackageFilePattern)" />
 	</Target>
 
-	<Target Name="Deployment" AfterTargets="Build" Condition="'$(Configuration)'=='Release' and '$(DeployOnBuild)'=='True'">
+	<Target Name="Deployment" AfterTargets="Build" Condition="'$(Configuration)'=='Distribution' and '$(DeployOnBuild)'=='True'">
 		<Exec Command="deployment.bat $(DocumentFilePath) $(LibraryFilePath)" WorkingDirectory="$(ProjectDir)" />
 	</Target>
-	<Target Name="Distribution" AfterTargets="Pack" Condition="'$(Configuration)'=='Release' and '$(DistOnPack)'=='True'">
+	<Target Name="Distribution" AfterTargets="Pack" Condition="'$(Configuration)'=='Distribution' and '$(DistOnPack)'=='True'">
 		<Exec Command="distribution.bat" WorkingDirectory="$(ProjectDir)" />
 	</Target>
 

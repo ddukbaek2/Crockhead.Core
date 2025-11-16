@@ -19,18 +19,24 @@ echo ---------------------------------------------------------------------------
 :: 	echo FILEPATH: !FILEPATH!
 :: 	xcopy /y "!FILEPATH!" "%DESTINATION_DIRECTORY%\"
 :: )
-set DESTINATION_DIRECTORY=D:\Github\IdleGame\Assets\Plugins\Crockhead
+set DESTINATION_DIRECTORY=D:\Github\Crockhead.Unity.Workbench\Assets\Plugins\Crockhead
 for %%F in (%*) do (
  	set FILEPATH=%%F
  	echo FILEPATH: !FILEPATH!
  	xcopy /y "!FILEPATH!" "!DESTINATION_DIRECTORY!\"
 )
-set DESTINATION_DIRECTORY=D:\Github\MillenniumOfCultivation\Assets\Plugins
+set DESTINATION_DIRECTORY=D:\Github\MillenniumOfCultivation\Assets\Plugins\Crockhead
 for %%F in (%*) do (
  	set FILEPATH=%%F
  	echo FILEPATH: !FILEPATH!
  	xcopy /y "!FILEPATH!" "%DESTINATION_DIRECTORY%\"
 )
+:: set DESTINATION_DIRECTORY=D:\Github\IdleGame\Assets\Plugins\Crockhead
+:: for %%F in (%*) do (
+::  	set FILEPATH=%%F
+::  	echo FILEPATH: !FILEPATH!
+::  	xcopy /y "!FILEPATH!" "!DESTINATION_DIRECTORY!\"
+:: )
 
 endlocal
 echo ================================================================================
