@@ -42,9 +42,9 @@ namespace Crockhead.Core
 				return;
 
 			try
-			{
-				m_IsDisposed = true;
+			{				
 				OnDispose(false);
+				m_IsDisposed = true;
 			}
 			catch (Exception exception)
 			{
@@ -69,9 +69,9 @@ namespace Crockhead.Core
 
 			try
 			{
+				OnDispose(true);				
 				m_IsDisposed = true;
 				GC.SuppressFinalize(this); // 소멸자 실행 중단.
-				OnDispose(true);
 			}
 			catch (Exception exception)
 			{
