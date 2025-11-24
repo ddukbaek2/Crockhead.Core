@@ -6,7 +6,7 @@ using System.Runtime.ExceptionServices;
 namespace Crockhead.Core
 {
 	/// <summary>
-	/// 유한 상태 기계.
+	/// 단순한 유한 상태 기계. (FiniteStateMachine)
 	/// <para>상태 전환시 OnTransition() ==> OnState() 호출됨.</para>
 	/// </summary>
 	public class FSM<TState> : Disposable
@@ -46,13 +46,20 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
-		public FSM(TState defaultState) : base()
+		public FSM(TState initialState) : base()
 		{
 			// 실제 상태 이벤트의 호출이 아닌 기본값의 설정이므로 SetState()로 실행하지 않음.
-			m_State = defaultState;
+			m_State = initialState;
 
 			OnTransitionEvent = null;
 			OnStateEvent = null;
+		}
+
+		/// <summary>
+		/// 생성됨.
+		/// </summary>
+		public FSM() : this(default)
+		{
 		}
 
 		/// <summary>
@@ -81,15 +88,15 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 상태 설정.
 		/// </summary>
-		public void SetState(TState state, bool forced = false)
+		public virtual void SetState(TState state, bool forced = false)
 		{
 			// 기본 상태는 제외.
-			var isDefaultState = EqualityComparer<TState>.Default.Equals(state, default);
-			if (isDefaultState && !forced)
+			var isInitialState = FSM<TState>.Equals(state, default);
+			if (isInitialState && !forced)
 				return;
 
 			// 동일 상태도 제외.
-			var isSameState = EqualityComparer<TState>.Default.Equals(m_State, state);
+			var isSameState = FSM<TState>.Equals(m_State, state);
 			if (isSameState && !forced)
 				return;
 
@@ -146,10 +153,19 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 상태 재실행.
 		/// </summary>
-		public void DoState()
+		public virtual void DoState()
 		{
 			// 동일 상태에서 실행 이벤트를 호출하기 위함이므로 강제적인 상태 재설정.
 			SetState(m_State, true);
+		}
+
+		/// <summary>
+		/// 두 상태가 동일한지 비교.
+		/// </summary>
+		public static bool Equals(TState left, TState right)
+		{
+			var same = EqualityComparer<TState>.Default.Equals(left, right);
+			return same;
 		}
 	}
 }
