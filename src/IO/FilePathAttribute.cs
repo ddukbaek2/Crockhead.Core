@@ -31,10 +31,17 @@ namespace Crockhead.Core
 		/// <summary>
 		/// 생성됨.
 		/// </summary>
-		public FilePathAttribute(string path, bool enabled = true) : base()
+		public FilePathAttribute(string path, bool enabled) : base()
 		{
 			m_Value = path;
 			m_IsEnabled = enabled;
+		}
+
+		/// <summary>
+		/// 생성됨.
+		/// </summary>
+		public FilePathAttribute(string path) : this(path, true)
+		{
 		}
 	}
 }
