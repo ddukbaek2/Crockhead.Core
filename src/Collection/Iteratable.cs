@@ -262,7 +262,7 @@ namespace Crockhead.Unity
 		///// <summary>
 		///// 사용 샘플.
 		///// </summary>
-		//private static void DoExample(Iteratable<T> iteratable)
+		//private static void DoExample(Iteratable<TResult> iteratable)
 		//{
 		//	ref var it = ref iterable.Begin();
 		//	ref var end = ref iterable.End();

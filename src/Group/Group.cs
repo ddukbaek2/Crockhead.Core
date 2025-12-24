@@ -13,7 +13,7 @@ namespace Crockhead.Core
 	/// <para>대칭차집합: (A - B) + (B - A)</para>
 	/// <para>해시 비교 할 경우 T의 순서 정렬을 위해 IComparable 구현 필요.</para>
 	/// </summary>
-	public sealed class Group<T> : Disposable, IEnumerable<T> // IEquatable<Group<T>>, IReadOnlyCollection<T>
+	public sealed class Group<T> : Disposable, IEnumerable<T> // IEquatable<Group<TResult>>, IReadOnlyCollection<TResult>
 	{
 		/// <summary>
 		/// 집합 컬렉션.
@@ -46,7 +46,7 @@ namespace Crockhead.Core
 			if (group == null)
 				throw new ArgumentNullException(nameof(group));
 
-			//m_Values = new HashSet<T>(group.m_Values, group.m_Values.Comparer);
+			//m_Values = new HashSet<TResult>(group.m_Values, group.m_Values.Comparer);
 			AddRange(group);
 		}
 
@@ -231,9 +231,9 @@ namespace Crockhead.Core
 		///// <summary>
 		///// 형변환 연산.
 		///// </summary>
-		//public static implicit operator Group<T>(T value)
+		//public static implicit operator Group<TResult>(TResult value)
 		//{
-		//	var group = new Group<T>();
+		//	var group = new Group<TResult>();
 		//	group.Add(value);
 		//	return group;
 		//}
@@ -241,7 +241,7 @@ namespace Crockhead.Core
 		///// <summary>
 		///// 형변환 연산. (첫번째 요소)
 		///// </summary>
-		//public static implicit operator T(Group<T> group)
+		//public static implicit operator TResult(Group<TResult> group)
 		//{
 		//	return Collections.FirstOrDefault(group);
 		//}
@@ -249,7 +249,7 @@ namespace Crockhead.Core
 		///// <summary>
 		///// 형변환 연산. (집합)
 		///// </summary>
-		//public static implicit operator T[](Group<T> group)
+		//public static implicit operator TResult[](Group<TResult> group)
 		//{
 		//	var list = Collections.ToList(group);
 		//	return Collections.CreateArray(list);

@@ -17,7 +17,7 @@ namespace Crockhead.Core
 		//	if (!operation.IsStarted)
 		//		return;
 
-		//	await Task.Run(() =>
+		//	await Task.Process(() =>
 		//	{
 		//		while (!operation.IsCompleted)
 		//		{
