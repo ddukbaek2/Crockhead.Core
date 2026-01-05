@@ -9,7 +9,7 @@ namespace Crockhead.Core
 	public static class Attributes
 	{
 		/// <summary>
-		/// 어트리뷰트 가져오기.
+		/// 특성 가져오기.
 		/// </summary>
 		public static bool TryGetAttribute(Type instanceType, Type attributeType, out Attribute attribute)
 		{
@@ -24,7 +24,7 @@ namespace Crockhead.Core
 		}
 
 		/// <summary>
-		/// 어트리뷰트 가져오기.
+		/// 특성 가져오기.
 		/// </summary>
 		public static bool TryGetAttribute<TAttribute>(Type instanceType, out TAttribute attribute) where TAttribute : Attribute
 		{

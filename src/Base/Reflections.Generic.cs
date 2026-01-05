@@ -47,7 +47,7 @@ namespace Crockhead.Core
 		}
 
 		/// <summary>
-		/// 어트리뷰트 가져오기.
+		/// 특성 가져오기.
 		/// </summary>
 		public static bool TryGetAttribute<TAttribute>(Type instanceType, out TAttribute attribute) where TAttribute : Attribute
 		{
@@ -58,6 +58,41 @@ namespace Crockhead.Core
 					return false;
 				attribute = (TAttribute)attrib;
 				return true;
+			}
+			catch
+			{
+				throw;
+			}
+		}
+
+		/// <summary>
+		/// 필드 값 설정하기.
+		/// </summary>
+		public static bool SetFieldValue<TFieldType>(object instance, string fieldName, TFieldType value)
+		{
+			try
+			{
+				var applied = SetFieldValue(instance, fieldName, value);
+				return applied;
+			}
+			catch
+			{
+				throw;
+			}
+		}
+
+		/// <summary>
+		/// 필드 값 가져오기.
+		/// </summary>
+		public static TFieldType GetFieldValue<TFieldType>(object instance, string fieldName)
+		{
+			try
+			{
+				var fieldValue = GetFieldValue(instance, fieldName);
+				if (fieldValue == null)
+					return default;
+
+				return (TFieldType)fieldValue;
 			}
 			catch
 			{

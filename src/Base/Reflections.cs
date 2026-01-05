@@ -89,11 +89,11 @@ namespace Crockhead.Core
 			try
 			{
 				var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Static;
-				var method = instanceType.GetMethod(methodName, bindingFlags);
-				if (method == null)
+				var methodInfo = instanceType.GetMethod(methodName, bindingFlags);
+				if (methodInfo == null)
 					return null;
 
-				var returnValue = method.Invoke(instanceType, parameters);
+				var returnValue = methodInfo.Invoke(instanceType, parameters);
 				return returnValue;
 			}
 			catch
@@ -103,7 +103,7 @@ namespace Crockhead.Core
 		}
 
 		/// <summary>
-		/// 어트리뷰트 가져오기.
+		/// 특성 가져오기.
 		/// </summary>
 		public static bool TryGetAttribute(Type instanceType, Type attributeType, out Attribute attribute)
 		{
@@ -117,6 +117,60 @@ namespace Crockhead.Core
 				if (attribute == null)
 					return false;
 				return true;
+			}
+			catch
+			{
+				throw;
+			}
+		}
+
+		/// <summary>
+		/// 필드 값 설정하기.
+		/// </summary>
+		public static bool SetFieldValue(object instance, string fieldName, object value)
+		{
+			if (instance == null)
+				return false;
+			if (string.IsNullOrWhiteSpace(fieldName))
+				return false;
+
+			try
+			{
+				var instanceType = instance.GetType();
+				var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance;
+				var fieldInfo = instanceType.GetField(fieldName, bindingFlags);
+				if (fieldInfo == null)
+					return false;
+
+				fieldInfo.SetValue(instance, value);
+				return true;
+			}
+			catch
+			{
+				throw;
+			}
+		}
+
+		/// <summary>
+		/// 필드 값 가져오기.
+		/// </summary>
+		public static object GetFieldValue(object instance, string fieldName)
+		{
+			if (instance == null)
+				return null;
+			if (string.IsNullOrWhiteSpace(fieldName))
+				return null;
+
+			try
+			{
+				var instanceType = instance.GetType();
+				var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance;
+				var fieldInfo = instanceType.GetField(fieldName, bindingFlags);
+				if (fieldInfo == null)
+					return null;
+
+				var fieldValue = fieldInfo.GetValue(instance);
+				return fieldValue;
 			}
 			catch
 			{
